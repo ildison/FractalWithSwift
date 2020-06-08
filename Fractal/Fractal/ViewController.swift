@@ -12,6 +12,7 @@ import UIKit
 class ViewController: UIViewController {
 
     var fractal: Fractal?
+    let fractalQueue = OperationQueue()
     
     @IBOutlet weak var imageView: UIImageView!
     
@@ -19,13 +20,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         fractal = Fractal(self.view.frame.size)
+        fractal?.delegate = self
         
-        if let uiimage = fractal?.getUIImage() {
-            self.imageView.image = uiimage
-        }
+        fractal?.drawFractal()
+
         setGestures()
     }
-    
     func setGestures() {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(zoom))
         doubleTap.numberOfTapsRequired = 2
@@ -35,13 +35,18 @@ class ViewController: UIViewController {
     @objc func zoom(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let point = sender.location(in: self.view)
-            print(point)
             fractal?.zoom(Int(point.x), Int(point.y))
-            if let uiimage = fractal?.getUIImage() {
-                self.imageView.image = uiimage
-            }
         }
     }
 
 }
 
+extension ViewController: FractalDelegate {
+    func updateUIImage(uiimage: UIImage?) {
+        if uiimage != nil {
+            DispatchQueue.main.async {
+                self.imageView.image = uiimage
+            }
+        }
+    }
+}

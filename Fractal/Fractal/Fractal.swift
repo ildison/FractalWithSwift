@@ -23,16 +23,21 @@ struct Complex {
     }
 }
 
+protocol FractalDelegate: class {
+    func updateUIImage(uiimage: UIImage?)
+}
+
 class Fractal {
     private var formula: (Complex, Complex, Int) -> Int = {_,_,_ in return 0}
     private var imageFromArray: ImageFromColorArray
-    var min: Complex
-    var max = Complex()
-//    var factor =  Complex()
+    private var min: Complex
+    private var max = Complex()
     var maxIteration = 25
-    var height: Double
-    var width: Double
-    let len: Int
+    private var height: Double
+    private var width: Double
+    private let len: Int
+    weak var delegate: FractalDelegate?
+//    private let dispatchQueue = DispatchQueue(label: , qos: .userInitiated, attributes: <#T##DispatchQueue.Attributes#>, autoreleaseFrequency: <#T##DispatchQueue.AutoreleaseFrequency#>, target: <#T##DispatchQueue?#>)
 
     init(_ size: CGSize) {
         height = Double(size.height)
@@ -46,10 +51,7 @@ class Fractal {
         
         formula = mandelbrot
     }
-    func getColor(_ t: Double) -> Rgb {
-        if t == 1 {
-            return Color.white
-        }
+    private func getColor(_ t: Double) -> Rgb {
         return Rgb(r: UInt8(9 * (1 - t) * pow(t, 3) * 255),
                    g: UInt8(15 * pow((1 - t), 2) * pow(t, 2) * 255),
                    b: UInt8(8.5 * pow((1 - t), 3) * t * 255))
@@ -67,12 +69,16 @@ class Fractal {
         }
         return iteration
     }
+    func drawFractal() {
+        let rgbArray = setColors()
+        let uiimage = getUIImage(rgbArray)
+        delegate?.updateUIImage(uiimage: uiimage)
         
-    func getUIImage() -> UIImage? {
-        let RgbArray = setColors()
-        return imageFromArray.getUIImageFromColorArray(RgbArray)
     }
-    func setColors() -> [Rgb] {
+    private func getUIImage(_ rgbArray: [Rgb]) -> UIImage? {
+        return imageFromArray.getUIImageFromColorArray(rgbArray)
+    }
+    private func setColors() -> [Rgb] {
         var fractal = [Rgb](repeating: Color.white, count: len)
         var y = 0.0;
         var c = Complex()
@@ -95,17 +101,17 @@ class Fractal {
         }
         return fractal
     }
-    func interpolate(_ start: Double, _ end: Double, _ interpolation: Double) -> Double {
+    private func interpolate(_ start: Double, _ end: Double, _ interpolation: Double) -> Double {
         return (start + ((end - start) * interpolation))
     }
     func zoom(_ x: Int, _ y: Int) {
         let tap = Complex(re: Double(x) / (width / (max.re - min.re)) + min.re,
                           im: Double(y) / (height / (max.im - min.im)) * -1 + max.im)
         let zoom = 0.8
-//        interpolation = 1.0 / zoom;
         min.re = interpolate(tap.re, min.re, zoom)
         min.im = interpolate(tap.im, min.im, zoom)
         max.re = interpolate(tap.re, max.re, zoom)
         max.im = interpolate(tap.im, max.im, zoom)
+        drawFractal()
     }
 }
