@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         fractal = Fractal(self.view.frame.size)
         fractal?.delegate = self
         
-        fractal?.drawFractal()
+        fractal?.resetFractal()
 
         setGestures()
     }

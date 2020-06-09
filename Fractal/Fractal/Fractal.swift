@@ -28,7 +28,7 @@ protocol FractalDelegate: class {
 }
 
 class Fractal {
-    private var formula: (Complex, Complex, Int) -> Int = {_,_,_ in return 0}
+    private var formula: (Complex, Int) -> Int = {_,_ in return 0}
     private var imageFromArray: ImageFromColorArray
     private var min: Complex
     private var max = Complex()
@@ -37,7 +37,7 @@ class Fractal {
     private var width: Double
     private let len: Int
     weak var delegate: FractalDelegate?
-//    private let dispatchQueue = DispatchQueue(label: , qos: .userInitiated, attributes: <#T##DispatchQueue.Attributes#>, autoreleaseFrequency: <#T##DispatchQueue.AutoreleaseFrequency#>, target: <#T##DispatchQueue?#>)
+    private let iterationQueue = DispatchQueue.global(qos: .userInteractive)
 
     init(_ size: CGSize) {
         height = Double(size.height)
@@ -57,20 +57,29 @@ class Fractal {
                    b: UInt8(8.5 * pow((1 - t), 3) * t * 255))
     }
 
-    private func mandelbrot(_ z: Complex, _ c: Complex, _ maxIter: Int) -> Int {
+    private func mandelbrot(_ c: Complex, _ maxIter: Int) -> Int {
         var iteration = 0;
-        var mutableZ = z
-        while (pow(mutableZ.re, 2.0) + pow(mutableZ.im, 2.0) <= 4
+        var z = c
+        while (pow(z.re, 2.0) + pow(z.im, 2.0) <= 4
             && iteration < maxIter)
         {
-            mutableZ = Complex(re: pow(mutableZ.re, 2.0) - pow(mutableZ.im, 2.0) + c.re,
-                        im: 2.0 * mutableZ.re * mutableZ.im + c.im);
+            z = Complex(re: pow(z.re, 2.0) - pow(z.im, 2.0) + c.re,
+                        im: 2.0 * z.re * z.im + c.im);
             iteration += 1;
         }
         return iteration
     }
-    func drawFractal() {
-        let rgbArray = setColors()
+    func resetFractal() {
+        min = Complex(re: -2.0, im: -1.0)
+        max.re = 2.0
+        max.im = min.im + (max.re - min.re) * height / width
+        maxIteration = 25
+        
+        drawFractal(min, max, maxIteration)
+    }
+    private func drawFractal(_ min: Complex, _ max: Complex, _ maxIteration: Int) {
+//        let myQueue = DispatchQueue(label: "myQueue", qos: .default, attributes: <#T##DispatchQueue.Attributes#>, autoreleaseFrequency: <#T##DispatchQueue.AutoreleaseFrequency#>, target: <#T##DispatchQueue?#>)
+        let rgbArray = setColors(min, max, maxIteration)
         let uiimage = getUIImage(rgbArray)
         delegate?.updateUIImage(uiimage: uiimage)
         
@@ -78,26 +87,20 @@ class Fractal {
     private func getUIImage(_ rgbArray: [Rgb]) -> UIImage? {
         return imageFromArray.getUIImageFromColorArray(rgbArray)
     }
-    private func setColors() -> [Rgb] {
-        var fractal = [Rgb](repeating: Color.white, count: len)
-        var y = 0.0;
-        var c = Complex()
+    private func setColors(_ min: Complex, _ max: Complex, _ maxIteration: Int) -> [Rgb] {
+        var fractal = [Rgb](repeating: Color.black, count: len)
         let factor = Complex(re: (max.re - min.re) / (width - 1), im: (max.im - min.im) / (height - 1))
-        while (y < height)
-        {
-            c.im = max.im - Double(y) * factor.im;
-            var x = 0.0;
-            while (x < width)
-            {
-                c.re = min.re + Double(x) * factor.re;
-                let z = Complex(re: c.re, im: c.im);
-                let iteration = formula(z, c, maxIteration)
-                if iteration != maxIteration {
-                    fractal[Int(y * width + x)] = getColor(Double(iteration) / Double(maxIteration))
+        fractal.withUnsafeMutableBufferPointer { fractalPtr in
+            for y in 0..<Int(height) {
+                DispatchQueue.concurrentPerform(iterations: Int(width)) { x in
+                    let c = Complex(re: min.re + Double(x) * factor.re,
+                                    im: max.im - Double(y) * factor.im)
+                    let iteration = formula(c, maxIteration)
+                    if iteration != maxIteration {
+                        fractalPtr[y * Int(width) + x] = getColor(Double(iteration) / Double(maxIteration))
+                    }
                 }
-                x += 1;
             }
-            y += 1;
         }
         return fractal
     }
@@ -112,6 +115,6 @@ class Fractal {
         min.im = interpolate(tap.im, min.im, zoom)
         max.re = interpolate(tap.re, max.re, zoom)
         max.im = interpolate(tap.im, max.im, zoom)
-        drawFractal()
+        drawFractal(min, max, maxIteration)
     }
 }
