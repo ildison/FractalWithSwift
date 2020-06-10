@@ -38,6 +38,7 @@ class Fractal {
     private let len: Int
     weak var delegate: FractalDelegate?
     private let iterationQueue = DispatchQueue.global(qos: .userInteractive)
+    private let fractalQueue = DispatchQueue(label: "FractalQueue", qos: .userInitiated)
 
     init(_ size: CGSize) {
         height = Double(size.height)
@@ -69,6 +70,9 @@ class Fractal {
         }
         return iteration
     }
+    func redrawFractal() {
+        drawFractal(min, max, maxIteration)
+    }
     func resetFractal() {
         min = Complex(re: -2.0, im: -1.0)
         max.re = 2.0
@@ -78,11 +82,11 @@ class Fractal {
         drawFractal(min, max, maxIteration)
     }
     private func drawFractal(_ min: Complex, _ max: Complex, _ maxIteration: Int) {
-//        let myQueue = DispatchQueue(label: "myQueue", qos: .default, attributes: <#T##DispatchQueue.Attributes#>, autoreleaseFrequency: <#T##DispatchQueue.AutoreleaseFrequency#>, target: <#T##DispatchQueue?#>)
-        let rgbArray = setColors(min, max, maxIteration)
-        let uiimage = getUIImage(rgbArray)
-        delegate?.updateUIImage(uiimage: uiimage)
-        
+        fractalQueue.async {
+            let rgbArray = self.setColors(min, max, maxIteration)
+            let uiimage = self.getUIImage(rgbArray)
+            self.delegate?.updateUIImage(uiimage: uiimage)
+        }
     }
     private func getUIImage(_ rgbArray: [Rgb]) -> UIImage? {
         return imageFromArray.getUIImageFromColorArray(rgbArray)
@@ -107,14 +111,13 @@ class Fractal {
     private func interpolate(_ start: Double, _ end: Double, _ interpolation: Double) -> Double {
         return (start + ((end - start) * interpolation))
     }
-    func zoom(_ x: Int, _ y: Int) {
+    func scale(_ x: Int, _ y: Int, _ scale: Double) {
         let tap = Complex(re: Double(x) / (width / (max.re - min.re)) + min.re,
                           im: Double(y) / (height / (max.im - min.im)) * -1 + max.im)
-        let zoom = 0.8
-        min.re = interpolate(tap.re, min.re, zoom)
-        min.im = interpolate(tap.im, min.im, zoom)
-        max.re = interpolate(tap.re, max.re, zoom)
-        max.im = interpolate(tap.im, max.im, zoom)
+        min.re = interpolate(tap.re, min.re, scale)
+        min.im = interpolate(tap.im, min.im, scale)
+        max.re = interpolate(tap.re, max.re, scale)
+        max.im = interpolate(tap.im, max.im, scale)
         drawFractal(min, max, maxIteration)
     }
 }
