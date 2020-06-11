@@ -120,4 +120,25 @@ class Fractal {
         max.im = interpolate(tap.im, max.im, scale)
         drawFractal(min, max, maxIteration)
     }
+    func move(_ orientation: String) {
+        let delta = Complex(re: (max.re - min.re).magnitude,
+                            im: (max.im - min.im).magnitude)
+        switch orientation {
+            case "up":
+                min.im += delta.im * 0.05
+                max.im += delta.im * 0.05
+            case "down":
+                min.im -= delta.im * 0.05
+                max.im -= delta.im * 0.05
+            case "right":
+                min.re += delta.re * 0.05
+                max.re += delta.re * 0.05
+            case "left":
+                min.re -= delta.re * 0.05
+                max.re -= delta.re * 0.05
+            default: return
+        }
+        drawFractal(min, max, maxIteration)
+    }
 }
+

@@ -11,6 +11,8 @@ import UIKit
 @IBDesignable
 class ViewController: UIViewController {
 
+    @IBOutlet var movingButtons: [UIButton]!
+    @IBOutlet weak var right: UIButton!
     var fractal: Fractal?
     let fractalQueue = OperationQueue()
     var pinchScale: CGFloat = 1
@@ -26,10 +28,12 @@ class ViewController: UIViewController {
         fractal?.resetFractal()
 
         setGestures()
+//        right.point(inside: <#T##CGPoint#>, with: <#T##UIEvent?#>)
     }
     func setGestures() {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(scale))
         doubleTap.numberOfTapsRequired = 2
+        doubleTap.delegate = self
         self.view.addGestureRecognizer(doubleTap)
         
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(scale))
@@ -48,11 +52,14 @@ class ViewController: UIViewController {
     @objc func scale(gesture: UIGestureRecognizer) {
         let point = gesture.location(in: self.view)
         switch gesture {
+
             case let pinch as UIPinchGestureRecognizer:
                 switch pinch.state {
+
                     case .began:
                         self.fractal?.maxIteration = 19
                     print(pinch.scale)
+
                     case .changed:
                         if pinch.scale - self.pinchScale > 0.1 {
                             fractal?.scale(Int(point.x), Int(point.y), 0.91)
@@ -60,13 +67,15 @@ class ViewController: UIViewController {
                             fractal?.scale(Int(point.x), Int(point.y), 1.09)
                         } else { return }
                         self.pinchScale = pinch.scale
+
                     case .ended:
                         print(pinch.scale)
                         self.fractal?.maxIteration = 25
                         self.fractal?.redrawFractal() //перерисовать
                         self.pinchScale = 1
                     default: return
-            }
+                }
+
             case let tap as UITapGestureRecognizer:
                 if tap.state == .ended {
                     fractal?.scale(Int(point.x), Int(point.y), 0.8)
@@ -75,12 +84,16 @@ class ViewController: UIViewController {
             
 
         }
-//        if gesture.state == .ended {
-//            let point = gesture.location(in: self.view)
-//            fractal?.zoom(Int(point.x), Int(point.y))
-//        }
     }
-
+    @IBAction func move(sender: UIButton) {
+        guard let orientation = sender.accessibilityIdentifier else {
+            return
+        }
+        fractal?.move(orientation)
+    }
+    @IBAction func reset() {
+        fractal?.resetFractal()
+    }
 }
 
 extension ViewController: FractalDelegate {
@@ -90,5 +103,11 @@ extension ViewController: FractalDelegate {
                 self.imageView.image = uiimage
             }
         }
+    }
+}
+
+extension ViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return touch.view is UIButton? ? false : true
     }
 }

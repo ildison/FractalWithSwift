@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -18,23 +18,122 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QmG-VJ-wEF">
                                 <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="caG-Z2-iIA">
+                                <rect key="frame" x="788" y="257" width="35" height="35"/>
+                                <accessibility key="accessibilityConfiguration" identifier="up"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="35" id="OCc-Iq-gpN"/>
+                                    <constraint firstAttribute="height" constant="37" id="aqX-CG-aTv"/>
+                                </constraints>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <state key="normal" backgroundImage="arrow.up" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="moveWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MNW-O4-Nnt"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kyi-7x-6RE">
+                                <rect key="frame" x="831" y="300.5" width="35" height="35"/>
+                                <accessibility key="accessibilityConfiguration" identifier="right"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="CD1-FL-oZh"/>
+                                    <constraint firstAttribute="width" constant="35" id="qQu-gz-b5F"/>
+                                </constraints>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <state key="normal" backgroundImage="arrow.right" catalog="system"/>
+                                <connections>
+                                    <action selector="moveWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pkI-1r-G8E"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u53-2j-AfH">
+                                <rect key="frame" x="788" y="347" width="35" height="35"/>
+                                <accessibility key="accessibilityConfiguration" identifier="down"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="35" id="eMl-Tf-2by"/>
+                                    <constraint firstAttribute="height" constant="37" id="u3N-fy-AEy"/>
+                                </constraints>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <state key="normal" backgroundImage="arrow.down" catalog="system"/>
+                                <connections>
+                                    <action selector="moveWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="f3E-xu-U8W"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oA7-hI-YoH">
+                                <rect key="frame" x="745" y="300.5" width="35" height="35"/>
+                                <accessibility key="accessibilityConfiguration" identifier="left"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="LJm-YF-Xmr"/>
+                                    <constraint firstAttribute="width" constant="35" id="aDf-iK-bcd"/>
+                                </constraints>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <state key="normal" backgroundImage="arrow.left" catalog="system"/>
+                                <connections>
+                                    <action selector="moveWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lDD-jM-3qh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m6h-wE-0UP">
+                                <rect key="frame" x="788" y="298" width="35" height="37"/>
+                                <accessibility key="accessibilityConfiguration" identifier="up"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="6lb-Q3-czt"/>
+                                    <constraint firstAttribute="width" constant="35" id="ehN-M1-1An"/>
+                                </constraints>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <state key="normal" backgroundImage="arrow.clockwise" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="reset" destination="BYZ-38-t0r" eventType="touchUpInside" id="8wF-Mi-GaN"/>
+                                </connections>
+                            </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="0rN-vl-KiH">
+                                <rect key="frame" x="748" y="183" width="118" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="R7F-F8-f9N"/>
+                                    <constraint firstAttribute="width" constant="114" id="bx6-un-GLD"/>
+                                </constraints>
+                                <color key="minimumTrackTintColor" red="0.0" green="0.56904578210000001" blue="0.57461684940000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" cocoaTouchSystemColor="lightTextColor"/>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="u53-2j-AfH" firstAttribute="top" secondItem="caG-Z2-iIA" secondAttribute="bottom" constant="53" id="1zs-Ec-d7l"/>
                             <constraint firstAttribute="top" secondItem="QmG-VJ-wEF" secondAttribute="top" id="763-5x-rC1"/>
+                            <constraint firstAttribute="bottom" secondItem="u53-2j-AfH" secondAttribute="bottom" constant="31" id="AdZ-5Q-79b"/>
+                            <constraint firstItem="u53-2j-AfH" firstAttribute="top" secondItem="m6h-wE-0UP" secondAttribute="bottom" constant="10" id="D9i-k2-sRb"/>
+                            <constraint firstItem="kyi-7x-6RE" firstAttribute="leading" secondItem="m6h-wE-0UP" secondAttribute="trailing" constant="8" id="EH0-T5-Aon"/>
                             <constraint firstItem="QmG-VJ-wEF" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="FY4-Jg-GFw"/>
+                            <constraint firstItem="kyi-7x-6RE" firstAttribute="leading" secondItem="oA7-hI-YoH" secondAttribute="trailing" constant="51" id="O3A-FW-mHQ"/>
+                            <constraint firstAttribute="trailing" secondItem="kyi-7x-6RE" secondAttribute="trailing" constant="30" id="UWZ-ns-oh0"/>
                             <constraint firstItem="QmG-VJ-wEF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VQm-gt-ZgB"/>
+                            <constraint firstItem="0rN-vl-KiH" firstAttribute="leading" secondItem="QmG-VJ-wEF" secondAttribute="trailing" constant="-146" id="aQr-EW-DqY"/>
                             <constraint firstAttribute="trailing" secondItem="QmG-VJ-wEF" secondAttribute="trailing" id="eAR-BQ-6FU"/>
+                            <constraint firstItem="caG-Z2-iIA" firstAttribute="top" secondItem="0rN-vl-KiH" secondAttribute="bottom" constant="44" id="eao-V2-TYn"/>
+                            <constraint firstItem="kyi-7x-6RE" firstAttribute="leading" secondItem="caG-Z2-iIA" secondAttribute="trailing" constant="8" id="mhj-Px-d9W"/>
+                            <constraint firstItem="u53-2j-AfH" firstAttribute="top" secondItem="oA7-hI-YoH" secondAttribute="bottom" constant="8" id="uS9-oG-08D"/>
+                            <constraint firstItem="u53-2j-AfH" firstAttribute="top" secondItem="kyi-7x-6RE" secondAttribute="bottom" constant="8" id="yJ5-vG-PNp"/>
+                            <constraint firstItem="kyi-7x-6RE" firstAttribute="leading" secondItem="u53-2j-AfH" secondAttribute="trailing" constant="8" id="zet-V8-cBw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="QmG-VJ-wEF" id="m8O-IS-4cA"/>
+                        <outlet property="right" destination="kyi-7x-6RE" id="Pzr-98-7Nu"/>
+                        <outletCollection property="movingButtons" destination="caG-Z2-iIA" collectionClass="NSMutableArray" id="ctm-dN-cWj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="131.8840579710145" y="121.875"/>
+            <point key="canvasLocation" x="131.25" y="121.73913043478262"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow.clockwise" catalog="system" width="115" height="128"/>
+        <image name="arrow.down" catalog="system" width="120" height="128"/>
+        <image name="arrow.left" catalog="system" width="128" height="98"/>
+        <image name="arrow.right" catalog="system" width="128" height="98"/>
+        <image name="arrow.up" catalog="system" width="120" height="128"/>
+    </resources>
 </document>
