@@ -120,6 +120,7 @@
                     </view>
                     <connections>
                         <outlet property="imageView" destination="QmG-VJ-wEF" id="m8O-IS-4cA"/>
+                        <outlet property="iterationSlider" destination="0rN-vl-KiH" id="97n-pr-eWw"/>
                         <outlet property="right" destination="kyi-7x-6RE" id="Pzr-98-7Nu"/>
                         <outletCollection property="movingButtons" destination="caG-Z2-iIA" collectionClass="NSMutableArray" id="ctm-dN-cWj"/>
                     </connections>

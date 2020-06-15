@@ -12,6 +12,7 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet var movingButtons: [UIButton]!
+    @IBOutlet weak var iterationSlider: UISlider!
     @IBOutlet weak var right: UIButton!
     var fractal: Fractal?
     let fractalQueue = OperationQueue()
@@ -24,9 +25,14 @@ class ViewController: UIViewController {
         
         fractal = Fractal(self.view.frame.size)
         fractal?.delegate = self
-        
         fractal?.resetFractal()
-
+        
+        iterationSlider.maximumValue = 5
+        iterationSlider.minimumValue = 1
+        iterationSlider.value = iterationSlider.minimumValue
+        iterationSlider.addTarget(self, action: #selector(changingMaxIteration), for: .valueChanged)
+        iterationSlider.addTarget(self, action: #selector(endedChangeMaxIterstion), for: .touchCancel)
+        
         setGestures()
 //        right.point(inside: <#T##CGPoint#>, with: <#T##UIEvent?#>)
     }
@@ -93,6 +99,20 @@ class ViewController: UIViewController {
     }
     @IBAction func reset() {
         fractal?.resetFractal()
+    }
+    @objc func changingMaxIteration(slider: UISlider) {
+        let currentValue = Int(slider.value) * 25
+        if fractal?.maxIteration != currentValue {
+            print(currentValue)
+            fractal?.maxIteration = currentValue
+            fractal?.redrawFractal()
+        }
+    }
+    @objc func endedChangeMaxIterstion(slider: UISlider) {
+        print("end")
+        fractal?.maxIteration = 25
+        fractal?.redrawFractal()
+        slider.value = slider.minimumValue
     }
 }
 
